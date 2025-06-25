@@ -1,0 +1,30 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Dark Store{% endblock %}
+
+{% block content %}
+{% if inventory %}
+    <table class="table text-center">
+        <tr>
+            <th>Item</th>
+            <th>Stock</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {% for item in inventory%}
+        <tr>
+            <th> {{item.product.title}} </th>
+            <td>{{item.stock}}</td>
+            <td><a href="{%url 'edit_product' item.dark_store.id item.id%}" class = "btn btn-warning">Edit</a></td>
+            <td><a href="{%url 'delete_product' item.dark_store.id item.id%}" class = "btn btn-danger">Delete</a></td>
+        </tr>
+        {% endfor %}
+        {% with inventory|first as item %}
+        <th colspan=4><a href="{%url 'create_product' item.dark_store.id %}" class="btn btn-success">Add</a></th>
+        {% endwith %}
+    </table>
+{% else %}
+    <h1>Your Dark Store is empty.</h1>
+    <a href="{%url 'create_product' darkstoreid %}" class="btn btn-success">Add</a>
+{% endif %}
+{% endblock %}

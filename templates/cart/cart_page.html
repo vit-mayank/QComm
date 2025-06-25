@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+{% if items %}
+    <table class="table">
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>total</th>
+        </tr>
+        {% for item,totals in items%}
+        <tr>
+            <th> {{item.product.title}} </th>
+            <td>{% is_in_cart item.product.id as cart%}
+                <a href="{%url 'remove_from_cart' item.product.id%}" class="btn btn-warning">-</a>
+                <input type="number" value = "{{cart.quantity}}" style="width:3em;" disabled>
+                <a href="{%url 'add_to_cart' item.product.id%}" class="btn btn-warning">+</a>
+        </td>
+            <td>{{item.product.price}} </td>
+            <td>{{totals}} </td>
+        </tr>
+        {% endfor %}
+        <th colspan="3">Final Amount </th>
+        <td>{{total}}</td>
+    </table>
+    <a class="btn btn-success" href="{%url 'checkout_first'%}">Checkout</a>
+{% else %}
+    <h1>Your cart is empty. <a href="{%url 'products'%}"> Add something now.</a></h1>
+{% endif %}
+
+{% endblock %} 

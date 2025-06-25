@@ -1,0 +1,39 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Order{% endblock %}
+
+{% block content %}
+<h3>User: {{order.user.username}}</h3>
+<table class="table">
+    <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>total</th>
+    </tr>
+    {% for item,totals in order_items%}
+    <tr>
+        <th> {{item.product.title}} </th>
+        <td>{{item.quantity}}</td>
+        <td>{{item.price}} </td>
+        <td>{{totals}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <th colspan="3">Final Amount </th>
+        <td>{{order.total}}</td>
+    </tr>
+</table>
+<p>Shipping_address: <textarea disabled class="text-dark-emphasis" >{{order.checkout.shipping_address}}</textarea></p>
+<p>Phone number: <input type="text" disabled value="{{order.checkout.phone}}" class="text-dark-emphasis"></p>
+<p>Payment Method: <input type="text" disabled value="{{order.checkout.payment_method}}" class="text-dark-emphasis"></p>
+<p>Payment Status: <input type="text" disabled value="{{order.checkout.payment_status}}" class="text-dark-emphasis"></p>
+<form method = "POST">
+    <fieldset style="border:solid grey;width:fit-content;padding:2rem;">
+        <legend>Update:</legend>
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-warning">Change</button>
+    </fieldset>
+</form>
+{% endblock %}

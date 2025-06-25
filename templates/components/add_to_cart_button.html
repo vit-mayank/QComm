@@ -1,0 +1,13 @@
+{% load custom_tags %}
+{%if user.is_authenticated%}
+    {% is_in_cart product.id as cart%}
+    {% if cart %}
+        <a href="{%url 'remove_from_cart' product.id%}" class="btn btn-warning">-</a>
+        <input type="number" value = "{{cart.quantity}}" style="width:3em;" disabled>
+        <a href="{%url 'add_to_cart' product.id%}" onclick="saveScrollPosition()" class="btn btn-warning">+</a>
+    {% else %}
+        <a href="{%url 'add_to_cart' product.id%}" onclick="saveScrollPosition()" class = "btn btn-primary">Add to Cart</a>
+    {% endif %}
+{% else %}
+<a href="{%url 'account_signup'%}" class="btn btn-warning">Add to Cart</a>
+{% endif %}

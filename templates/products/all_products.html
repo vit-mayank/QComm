@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block title %}All Products {% endblock %}
+
+{% block content %}
+{% if products %}
+      <div style="display:grid;  grid-template-columns: auto auto auto;">
+      {% for product in products %}
+          <div class="card p-2 m-2">
+              <img src="{{product.image.url}}" class="card-img-top" alt="" style="width:100%;height:100%;">
+              <div class="card-body">
+                <h5 class="card-title"> {{product.title}} </h5>
+                <p class="card-text"> {{product.desc}} </p>
+                <a href="{%url 'product_page' product.id%}" class="btn btn-primary">See</a>
+                {% include 'components/add_to_cart_button.html' %}
+              </div>
+            </div>
+      {% endfor %}
+    </div>
+{% else %}
+<h1>No Products Found</h1>
+{% endif %}
+{% endblock %}

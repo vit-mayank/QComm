@@ -1,0 +1,12 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+<h2>Are You Sure You want to delete:</h2>
+<h4>{{inventory.product.title}} from {{inventory.dark_store.name}}</h4>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes</button>
+</form>
+{% endblock %}
