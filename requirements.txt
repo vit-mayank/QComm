@@ -4,3 +4,4 @@ razorpay==1.4.2
 gunicorn
 whitenoise
 dj-database-url
+setuptools
