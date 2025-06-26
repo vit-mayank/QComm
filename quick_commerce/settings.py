@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-y!f$qq-_&yhn*5(lxx4+x7n#$p0mwj1&w*1^q+7)z(-jyd*15_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['qcomm.onrender.com','MayankAgra.pythonanywhere.com']
+ALLOWED_HOSTS = ['qcomm.onrender.com','MayankAgra.pythonanywhere.com','localhost','127.0.0.1']
 
 
 # Application definition
