@@ -5,3 +5,4 @@ gunicorn
 whitenoise
 dj-database-url
 setuptools
+Pillow==10.2.0

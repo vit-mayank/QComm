@@ -38,7 +38,8 @@ def product_page(request,product_id):
     product = Product.objects.filter(pk = product_id)
     if product:
         product = product.first()
-        if Inventory.objects.filter(dark_store = Customer.objects.filter(user = request.user).first().dark_store, product=product).first():
+        print(product)
+        if Inventory.objects.filter(dark_store = Customer.objects.filter(user = request.user).first().dark_store if not request.user.is_anonymous else  Dark_Store.objects.filter(pk = request.session.get('location')).first(), product=product).first():
             return render(request,'products/product_page.html',{'product':product})
     else:
         return redirect("main")

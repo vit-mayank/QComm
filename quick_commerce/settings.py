@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-y!f$qq-_&yhn*5(lxx4+x7n#$p0mwj1&w*1^q+7)z(-jyd*15_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['qcomm.onrender.com']
+ALLOWED_HOSTS = ['qcomm.onrender.com','MayankAgra.pythonanywhere.com']
 
 
 # Application definition
@@ -62,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'quick_commerce.urls'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 TEMPLATES = [
     {
