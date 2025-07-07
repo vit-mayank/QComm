@@ -3,10 +3,13 @@
 {% block title %}Create Product{% endblock %}
 
 {% block content %}
-<form method="POST" enctype="multipart/form-data">
+<div class="max-w-lg mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-8">
+  <h2 class="text-2xl font-bold mb-6">Create Product</h2>
+  <form method="POST" enctype="multipart/form-data" class="space-y-4">
     {% csrf_token %}
-    {{form1.as_p}}
-    {{form2.as_p}}
-    <button type="submit">Create</button>
-</form>
+    <div class="space-y-2">{{form1.as_p}}</div>
+    <div class="space-y-2">{{form2.as_p}}</div>
+    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition">Create</button>
+  </form>
+</div>
 {% endblock %}

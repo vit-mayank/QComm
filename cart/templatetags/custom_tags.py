@@ -17,8 +17,8 @@ def is_in_cart(context,productid):
 def cart_count(context):
     inst = Cart_Item.objects.filter(user = context['request'].user)
     count = 0
-    for _ in inst:
-        count+=1
+    for item in inst:
+        count += item.quantity  # Sum the quantity of each item
     return count
 
 @register.simple_tag(takes_context=True)

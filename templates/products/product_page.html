@@ -3,154 +3,34 @@
 {% block title %}{{product.title}}{% endblock %}
 
 {% block content %}
-<style>
-    .product-container {
-        display: flex;
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-        gap: 20px; /* Space between sections */
-        align-items: flex-start;
-    }
-    
-    /* Left Section */
-    .left-section {
-        width: 60%; /* Takes 60% of the container */
-        max-height: 100vh;
-        overflow-y: auto;
-        padding-right: 20px;
-        overflow-y: auto;  /* Keeps it scrollable */
-        scrollbar-width: none; /* Hides scrollbar in Firefox */
-    }
-    .left-section::-webkit-scrollbar {
-        display: none; /* Hides scrollbar in Chrome, Safari, Edge */
-    }
-    .left-section img {
-        {% comment %} width: 100%; {% endcomment %}
-        height:50vh;
-        margin: auto auto;
-        display: block;
-    }
-    
-    .product-details {
-        margin-top: 20px;
-    }
-    
-    /* Right Section (Fixed on Scroll) */
-    .right-section {
-        width: 40%;
-        position: sticky;
-        top: 20px;
-        background: white;
-        padding: 20px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .delivery-time {
-        color: green;
-        font-weight: bold;
-    }
-    
-    .price-options {
-        display: flex;
-        gap: 10px;
-    }
-    
-    .price-options button {
-        padding: 10px;
-        border: 1px solid #ddd;
-        background: white;
-        cursor: pointer;
-    }
-    
-    .price-options .selected {
-        background: green;
-        color: white;
-        border: none;
-    }
-    
-    .quantity {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .quantity button {
-        padding: 5px 10px;
-        font-size: 18px;
-        border: none;
-        background: #ddd;
-        cursor: pointer;
-    }
-</style>
-{% comment %} <div class="row">
-    <div class="col">
-        <img src="{{product.image.url}}" alt="" style="width:100%;">
-    </div>
-    <div class="col">
-        <h1>{{product.title }}</h1>
-        <p>{{product.desc}}</p>
-        <p>Rs. {{product.price}}</p>
-        {%include "components/add_to_cart_button.html"%}
-    </div>
-</div> {% endcomment %}
-
-    <div class="product-container">
-        <!-- Left Section -->
-        <div class="left-section">
-            <img src="{{product.image.url}}" alt="{{product.title}}">
-            <div class="product-details">
-                <h2>Product Details</h2>
-                <p><strong>Type:</strong> {{product.subcategory}}</p>
-                <h3>Key Features</h3>
-                <p>{{product.desc}}</p>
-                <p><strong>Unit:</strong> 500 ml</p>
-                <p><strong>FSSAI License:</strong> 10018021003047</p>
-                <p><strong>Shelf Life:</strong> 2 days</p>
-                <h3>Return Policy</h3>
-                <p>The product is non-returnable. In case of incorrect, damaged, or expired items, a replacement can be requested within 24 hours.</p>
-            </div>
+<div class="flex flex-col md:flex-row max-w-5xl mx-auto p-4 gap-8">
+    <!-- Left Section -->
+    <div class="md:w-2/3 flex flex-col items-center">
+        <img src="{{product.image.url}}" alt="{{product.title}}" class="rounded-lg shadow-lg w-full max-h-[60vh] object-contain bg-white dark:bg-gray-800" />
+        <div class="mt-8 w-full bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-2">Product Details</h2>
+            <p class="mb-2"><span class="font-semibold">Type:</span> {{product.subcategory}}</p>
+            <h3 class="font-semibold mt-4 mb-1">Key Features</h3>
+            <p class="mb-2">{{product.desc}}</p>
+            <p class="mb-2"><span class="font-semibold">Unit:</span> 500 ml</p>
+            <p class="mb-2"><span class="font-semibold">FSSAI License:</span> 10018021003047</p>
+            <p class="mb-2"><span class="font-semibold">Shelf Life:</span> 2 days</p>
+            <h3 class="font-semibold mt-4 mb-1">Return Policy</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">The product is non-returnable. In case of incorrect, damaged, or expired items, a replacement can be requested within 24 hours.</p>
         </div>
-
-        <!-- Right Section -->
-        <div class="right-section">
-            <h1>{{product.title}}</h1><br>
-            <p class="delivery-time">⏳ 10 MINS</p><br>
-            <h3>RS {{product.price}}</h3><br>
-            {%include "components/add_to_cart_button.html"%}
-
-            {% comment %} <div class="price-options">
-                <button class="selected">{{product.price}}</button>
-                <button>1 ltr - ₹67</button>
-            </div> {% endcomment %}
-            {% comment %} <div class="quantity">
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
-            </div> {% endcomment %}
-            <h3 class='mt-4'>Why shop from Qcomm?</h3>
-            <p>⚡ Superfast Delivery: Get your order delivered to your doorstep at the earliest from dark stores.</p>
-        </div>
-
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let productLeft = document.querySelector(".product-left");
-            let productRight = document.querySelector(".product-right");
-            
-            productRight.addEventListener("wheel", function (event) {
-                let atLeftBottom = productLeft.scrollTop + productLeft.clientHeight >= productLeft.scrollHeight;
-                
-                if (!atLeftBottom) {
-                    // Scroll the left section instead of the page
-                    event.preventDefault();
-                    productLeft.scrollTop += event.deltaY;
-                } 
-                // If left section is fully scrolled, allow normal page scrolling
-            }, { passive: false });
-        });
-        
-        
-        
-    </script>
+    <!-- Right Section -->
+    <div class="md:w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8 h-fit flex flex-col gap-4">
+        <h1 class="text-2xl font-bold mb-2">{{product.title}}</h1>
+        <p class="text-green-600 dark:text-green-400 font-semibold flex items-center gap-1"><span class="text-lg">⏳</span> 10 MINS</p>
+        <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-4">₹{{product.price}}</h3>
+        {% include "components/add_to_cart_button.html" %}
+        <div class="mt-6">
+            <h3 class="font-semibold mb-1">Why shop from Qcomm?</h3>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300">
+                <li>⚡ Superfast Delivery: Get your order delivered to your doorstep at the earliest from dark stores.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

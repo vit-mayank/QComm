@@ -2,312 +2,92 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<style>
-
-    
-    
-    /* Hero Section */
-    .hero {
-        background: url('https://cdn.pixabay.com/photo/2021/10/30/08/28/scooter-6753797_1280.jpg') center/cover;
-        color: white;
-        text-align: center;
-        padding: 100px 20px;
-        position: relative;
-    }
-    
-    .hero-content {
-        background: rgba(0, 0, 0, 0.6);
-        padding: 20px;
-        display: inline-block;
-        border-radius: 10px;
-    }
-    
-    .hero-content h1 {
-        font-size: 36px;
-        margin: 0;
-    }
-    
-    .hero-content p {
-        font-size: 18px;
-    }
-    
-    .hero-content button {
-        background: #ffcc00;
-        color: black;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 10px;
-    }
-    
-    /* Categories */
-    .categories {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        padding: 40px 20px;
-    }
-    
-    .category {
-        text-align: center;
-        background: white;
-        padding: 0px;
-        border-radius: 10px;
-    }
-    
-    .category img {
-        width: 100%;
-        border-radius: 10px;
-    }
-    .category-section {
-        padding: 20px;
-        background-color: #f8f8f8;
-    }
-    
-    .category-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 20px;
-        text-align: center;
-    }
-    
-    .category-item {
-        background: #fff;
-        border-radius: 10px;
-        transition: transform 0.2s ease-in-out;
-    }
-    
-    .category-item img {
-        width: 100%;
-        height: 100%;
-    }
-    
-    .category-item:hover {
-        transform: scale(1.05);
-    }
-    .product-category {
-        padding: 20px;
-    }
-    
-    .category-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    
-    .category-header h2 {
-        font-size: 25px;
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .see-all {
-        color: #2ba84a;
-        font-size: 20px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    
-    .product-scroll {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        padding-bottom: 10px;
-        scroll-snap-type: x mandatory;
-    }
-    
-    .product-card {
-        flex: 0 0 200px; /* Set width of each card */
-        background: #fff;
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        scroll-snap-align: start;
-    }
-    
-    .product-card img {
-        width: 100%;
-        height: 100px;
-        object-fit: contain;
-        margin-bottom: 5px;
-    }
-    
-    .delivery-time {
-        font-size: 12px;
-        color: #555;
-        margin-bottom: 5px;
-    }
-    
-    .product-card h3 {
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
-    .product-card a{
-        font-size:10px;
-    }
-    
-    .weight {
-        font-size: 12px;
-        color: #666;
-    }
-    
-    .price {
-        font-size: 14px;
-        font-weight: bold;
-        color: #000;
-    }
-    
-    /* Hide scrollbar */
-    .product-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-    
-    /* Full-screen overlay */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-/* Popup box */
-.popup-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Button styling */
-.popup-box button {
-    background: #2ba84a;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.popup-box button:hover {
-    background: #218a3a;
-}
-
-    
-    
-    
-
-</style>
-{% if request.session.location %}
-
-{% else %}
- <div class="popup-overlay">
-    <div class="popup-box">
-        <h2>Important Notice {{ request.session.location }}</h2>
-        <p>This popup cannot be closed. Please proceed with the required action.</p>
-        <form method="POST">
-            {% csrf_token %}
-            <select name="location" id="location">
-                {% for location in locations %}
-                <option value="{{location.id}}">{{location.location}}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Proceed</button>
-        </form>
+{% if not request.session.location %}
+  <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-80 text-center">
+      <h2 class="text-xl font-bold mb-2">Important Notice</h2>
+      <p class="mb-4">This popup cannot be closed. Please proceed with the required action.</p>
+      <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <select name="location" id="location" class="w-full p-2 rounded border border-gray-300 dark:bg-gray-700 dark:text-gray-100">
+          {% for location in locations %}
+            <option value="{{location.id}}">{{location.location}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition">Proceed</button>
+      </form>
     </div>
-</div>
+  </div>
 {% endif %}
 
-    
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Groceries Delivered in Minutes!</h1>
-                <p>Fresh, fast, and at your doorstep.</p>
-                <button>Shop Now</button>
-            </div>
-        </section>
-        <!-- Popular Categories -->
-        <section class="categories">
-            <div class="category">
-                <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/pharmacy-WEB.jpg" alt="Fresh Produce">
-            </div>
-            <div class="category">
-                <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/Pet-Care_WEB.jpg" alt="Dairy & Eggs">
-            </div>
-            <div class="category">
-                <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-03/babycare-WEB.jpg" alt="Staples & Grains">
-            </div>
-        </section>
-        <section class="category-section">
-            <div class="category-grid">
-                {% for category in categories %}
-                <a href="{%url 'category_page' category.id%}">
-                <div class="category-item">
-                    <img src= {% if category.image %}"{{category.image.url}}" {% else %} "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/layout-engine/2022-11/Slice-2_10.png" {% endif %} >
-                </div> 
-            </a>
-                {% endfor %}
-            </div>
-        </section>
+<!-- Hero Section -->
+<section class="relative bg-cover bg-center min-h-[350px] flex items-center justify-center" style="background-image: url('https://cdn.pixabay.com/photo/2021/10/30/08/28/scooter-6753797_1280.jpg');">
+  <div class="bg-black bg-opacity-60 p-8 rounded-lg text-center">
+    <h1 class="text-3xl md:text-5xl font-bold text-white mb-2">Groceries Delivered in Minutes!</h1>
+    <p class="text-lg text-gray-200 mb-4">Fresh, fast, and at your doorstep.</p>
+    <a href="/products/" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded transition">Shop Now</a>
+  </div>
+</section>
 
-        {% for category,inventories in products_list %}
-        <section class="product-category">
-            <div class="category-header">
-                <h2>{{category.title}}</h2>
-                <a href="{%url 'category_page' category.id%}" class="see-all">See All</a>
-            </div>
-            <div class="product-scroll">
-            {% for inventory in inventories %}
-                <div class="product-card">
-                    <a href="{%url 'product_page' inventory.product.id%}" style="text-decoration:none;">
-                    <img src="{{inventory.product.image.url}}" alt="{{inventory.prduct.title}}">
-                    <h3>{{inventory.product.title}}</h3>
-                </a>
-                    {% with product=inventory.product%}
-                        {%include "components/add_to_cart_button.html"%}
-                    {%endwith%}
-                </div>
-            {% endfor %}
-            </div>
-            
-        </section>
+<!-- Popular Categories (Banner) -->
+<section class="flex flex-row justify-center items-stretch gap-8 py-10 w-full max-w-7xl mx-auto">
+  <div class="flex flex-col items-center flex-1">
+    <div class="h-64 w-full rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+      <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/pharmacy-WEB.jpg" alt="Fresh Produce" class="object-cover w-full h-full" />
+    </div>
+    <span class="mt-4 text-center font-semibold text-xl">Pharmacy</span>
+  </div>
+  <div class="flex flex-col items-center flex-1">
+    <div class="h-64 w-full rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+      <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/Pet-Care_WEB.jpg" alt="Dairy & Eggs" class="object-cover w-full h-full" />
+    </div>
+    <span class="mt-4 text-center font-semibold text-xl">Pet Care</span>
+  </div>
+  <div class="flex flex-col items-center flex-1">
+    <div class="h-64 w-full rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+      <img src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-03/babycare-WEB.jpg" alt="Staples & Grains" class="object-cover w-full h-full" />
+    </div>
+    <span class="mt-4 text-center font-semibold text-xl">Baby Care</span>
+  </div>
+</section>
 
-        
-        {% endfor %}
-        
-        
-        
-        <script>
-         // Prevent closing with keyboard (Escape key)
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-        event.preventDefault();
-    }
-});
+<!-- Category Grid -->
+<section class="py-8 bg-gray-50 dark:bg-gray-900">
+  <h2 class="text-2xl font-bold mb-6 text-center">Categories</h2>
+  <div class="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+    {% for category in categories %}
+      <a href="{% url 'category_page' category.id %}" class="block">
+        <div class="flex flex-col items-center">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:scale-105 transition-transform overflow-hidden flex items-center justify-center h-28 w-full">
+            <img src={% if category.image %}"{{category.image.url}}"{% else %}"https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=270/layout-engine/2022-11/Slice-2_10.png"{% endif %} alt="{{category.title}}" class="object-contain w-full h-full" />
+          </div>
+          <span class="mt-2 text-center font-medium">{{ category.title }}</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
 
-
-// Example action (modify as needed)
-function handleAction() {
-    sessionStorage.setItem('location',document.getElementById('location').value);
-    location.reload();
-}
-
-        </script>
-    
-
+<!-- Product Carousels by Category -->
+{% for category, inventories in products_list %}
+  <section class="py-8 max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-4 px-2">
+      <h2 class="text-xl font-bold">{{category.title}}</h2>
+      <a href="{% url 'category_page' category.id %}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">See All</a>
+    </div>
+    <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+      {% for inventory in inventories %}
+        <div class="min-w-[200px] bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex flex-col items-center">
+          <a href="{% url 'product_page' inventory.product.id %}" class="w-full flex flex-col items-center">
+            <img src="{{inventory.product.image.url}}" alt="{{inventory.product.title}}" class="w-full h-28 object-contain rounded mb-2 bg-gray-50 dark:bg-gray-800" />
+            <h3 class="font-semibold text-center mb-1">{{inventory.product.title}}</h3>
+          </a>
+          {% with product=inventory.product %}
+            {% include "components/add_to_cart_button.html" %}
+          {% endwith %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endfor %}
 {% endblock %}

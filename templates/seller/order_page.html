@@ -3,37 +3,51 @@
 {% block title %}Order{% endblock %}
 
 {% block content %}
-<h3>User: {{order.user.username}}</h3>
-<table class="table">
-    <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>total</th>
-    </tr>
-    {% for item,totals in order_items%}
-    <tr>
-        <th> {{item.product.title}} </th>
-        <td>{{item.quantity}}</td>
-        <td>{{item.price}} </td>
-        <td>{{totals}}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-        <th colspan="3">Final Amount </th>
-        <td>{{order.total}}</td>
-    </tr>
-</table>
-<p>Shipping_address: <textarea disabled class="text-dark-emphasis" >{{order.checkout.shipping_address}}</textarea></p>
-<p>Phone number: <input type="text" disabled value="{{order.checkout.phone}}" class="text-dark-emphasis"></p>
-<p>Payment Method: <input type="text" disabled value="{{order.checkout.payment_method}}" class="text-dark-emphasis"></p>
-<p>Payment Status: <input type="text" disabled value="{{order.checkout.payment_status}}" class="text-dark-emphasis"></p>
-<form method = "POST">
-    <fieldset style="border:solid grey;width:fit-content;padding:2rem;">
-        <legend>Update:</legend>
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" class="btn btn-warning">Change</button>
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-6 mt-6">
+  <h3 class="text-lg font-semibold mb-4">User: {{order.user.username}}</h3>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mb-4">
+      <thead class="bg-gray-100 dark:bg-gray-800">
+        <tr>
+          <th class="px-4 py-2 text-left font-semibold">Item</th>
+          <th class="px-4 py-2 text-left font-semibold">Quantity</th>
+          <th class="px-4 py-2 text-left font-semibold">Price</th>
+          <th class="px-4 py-2 text-left font-semibold">Total</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-900">
+        {% for item,totals in order_items %}
+        <tr class="border-b dark:border-gray-800">
+          <td class="px-4 py-2">{{item.product.title}}</td>
+          <td class="px-4 py-2">{{item.quantity}}</td>
+          <td class="px-4 py-2">₹{{item.price}}</td>
+          <td class="px-4 py-2">₹{{totals}}</td>
+        </tr>
+        {% endfor %}
+        <tr class="bg-gray-50 dark:bg-gray-800 font-bold">
+          <td colspan="3" class="px-4 py-2 text-right">Final Amount</td>
+          <td class="px-4 py-2">₹{{order.total}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="space-y-2 mb-6">
+    <label class="block font-semibold">Shipping Address:</label>
+    <textarea disabled class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">{{order.checkout.shipping_address}}</textarea>
+    <label class="block font-semibold">Phone number:</label>
+    <input type="text" disabled value="{{order.checkout.phone}}" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+    <label class="block font-semibold">Payment Method:</label>
+    <input type="text" disabled value="{{order.checkout.payment_method}}" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+    <label class="block font-semibold">Payment Status:</label>
+    <input type="text" disabled value="{{order.checkout.payment_status}}" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+  </div>
+  <form method="POST" class="bg-gray-50 dark:bg-gray-800 rounded p-4">
+    <fieldset>
+      <legend class="font-semibold mb-2">Update:</legend>
+      {% csrf_token %}
+      <div class="mb-4">{{form.as_p}}</div>
+      <button type="submit" class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded transition">Change</button>
     </fieldset>
-</form>
+  </form>
+</div>
 {% endblock %}

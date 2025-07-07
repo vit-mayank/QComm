@@ -2,31 +2,41 @@
 {% block title %}Order Page{% endblock %}
 {% block content %}
 {% if order %}
-<h1>Order No: {{order.order_no}} </h1>
-<table class="table">
-    <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Unit price</th>
-        <th>Total</th>
-    </tr>
-    {% for item,totals in items%}
-    <tr>
-        <th> {{item.product.title}} </th>
-        <td>{{item.quantity}}</td>
-        <td>{{item.price}} </td>
-        <td>{{totals}}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-        <th colspan="3">Final Amount </th>
-        <td>{{order.total}}</td>
-    </tr>
-</table>
-<h3>Payment Method : {{order.checkout.get_payment_method_display}}</h3>
-<h3>Payment Status : {{order.checkout.get_payment_status_display}}</h3>
-<h3>Current Status : {{order.get_status_display}}</h3>
+  <div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-6 mt-6">
+    <h1 class="text-2xl font-bold mb-4">Order No: {{order.order_no}}</h1>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-100 dark:bg-gray-800">
+          <tr>
+            <th class="px-4 py-2 text-left font-semibold">Item</th>
+            <th class="px-4 py-2 text-left font-semibold">Quantity</th>
+            <th class="px-4 py-2 text-left font-semibold">Unit price</th>
+            <th class="px-4 py-2 text-left font-semibold">Total</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-900">
+          {% for item,totals in items %}
+          <tr class="border-b dark:border-gray-800">
+            <td class="px-4 py-2">{{item.product.title}}</td>
+            <td class="px-4 py-2">{{item.quantity}}</td>
+            <td class="px-4 py-2">₹{{item.price}}</td>
+            <td class="px-4 py-2">₹{{totals}}</td>
+          </tr>
+          {% endfor %}
+          <tr class="bg-gray-50 dark:bg-gray-800 font-bold">
+            <td colspan="3" class="px-4 py-2 text-right">Final Amount</td>
+            <td class="px-4 py-2">₹{{order.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-6 space-y-2">
+      <h3 class="font-semibold">Payment Method: <span class="font-normal">{{order.checkout.get_payment_method_display}}</span></h3>
+      <h3 class="font-semibold">Payment Status: <span class="font-normal">{{order.checkout.get_payment_status_display}}</span></h3>
+      <h3 class="font-semibold">Current Status: <span class="font-normal">{{order.get_status_display}}</span></h3>
+    </div>
+  </div>
 {% else %}
-<h1>No such order ID <a href="{%url 'products'%}"> Buy something now.</a></h1>
+  <h1 class="text-2xl font-bold text-center mt-12">No such order ID <a href="{% url 'products' %}" class="text-blue-600 dark:text-blue-400 underline">Buy something now.</a></h1>
 {% endif %}
 {% endblock %}

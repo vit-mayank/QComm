@@ -3,24 +3,25 @@
 {% block title %}Signup Page{% endblock %}
 
 {% block content %}
-<form method="post" action="{%url 'account_signup'%}">
+<div class="max-w-md mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-8 mt-8">
+  <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+  <form method="post" action="{% url 'account_signup' %}" class="space-y-4">
     {% csrf_token %}
-    {{form.as_p}}
-    <button type = "submit" class="btn btn-success">Create Account</button>
-    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class = 'btn btn-warning'>Cancel</a>
-</form>
-
+    <div class="space-y-2">{{form.as_p}}</div>
+    <div class="flex gap-2">
+      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition">Create Account</button>
+      <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded transition text-center">Cancel</a>
+    </div>
+  </form>
+</div>
 <script>
-    console.log("hh")
-    document.getElementById("id_user_type").addEventListener("change",(event)=>{
-        console.log("hi")
-        type = event.target.value;
-        console.log(type)
-        if(type=="customer"){
-            document.getElementById("id_dark_store").parentElement.style.display = "block";
-        }else{
-            document.getElementById("id_dark_store").parentElement.style.display = "none";
-        }
-    })
+  document.getElementById("id_user_type")?.addEventListener("change",(event)=>{
+    const type = event.target.value;
+    if(type==="customer"){
+      document.getElementById("id_dark_store").parentElement.style.display = "block";
+    }else{
+      document.getElementById("id_dark_store").parentElement.style.display = "none";
+    }
+  })
 </script>
 {% endblock %}

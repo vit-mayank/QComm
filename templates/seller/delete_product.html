@@ -3,10 +3,12 @@
 {% block title %}Delete Product{% endblock %}
 
 {% block content %}
-<h2>Are You Sure You want to delete:</h2>
-<h4>{{inventory.product.title}} from {{inventory.dark_store.name}}</h4>
-<form method="POST">
+<div class="max-w-lg mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center">
+  <h2 class="text-2xl font-bold mb-4">Are You Sure You want to delete:</h2>
+  <h4 class="text-lg font-semibold mb-6">{{inventory.product.title}} from {{inventory.dark_store.name}}</h4>
+  <form method="POST">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes</button>
-</form>
+    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded transition">Yes, Delete</button>
+  </form>
+</div>
 {% endblock %}

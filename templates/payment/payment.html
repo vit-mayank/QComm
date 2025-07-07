@@ -1,41 +1,98 @@
 {% extends "base.html" %}
 
-{% block title %}Payment {% endblock %}
+{% block title %}Payment{% endblock %}
 
 {% block content %}
+<div id="payment-alert" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded shadow-lg text-white text-center text-lg font-semibold"></div>
+<div class="flex flex-col items-center justify-center min-h-[60vh]">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col items-center">
+    <svg class="animate-spin h-8 w-8 text-blue-600 dark:text-blue-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+    </svg>
+    <h2 class="text-xl font-semibold mb-2">Processing Payment</h2>
+    <p class="text-gray-600 dark:text-gray-300 text-center mb-2">Please wait while we process your payment...</p>
+  </div>
+</div>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
 <script>
-    fetch('/create_order_id/',{
-        method : "POST",
-        headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body : "amount={{amount}}"
-
-    }).then(response => response.josn())
-    .then(data => {
-        let options = {
-                "key": "{{ razorpay_key }}",  
-                "amount": data.amount,  
-                "currency": "INR",
-                "name": "Your Company Name",
-                "description": "Purchase",
-                "order_id": data.id,  
-                "handler": function (response) {
-                    fetch('/verify_payment/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: `razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`
-                    })
-                    .then(res => res.json())
-                    .then(data => alert(data.status))
-                    .catch(err => console.error(err));
-                },
-                "theme": { "color": "#3399cc" }
-            };
-
-            let rzp = new Razorpay(options);
-            rzp.open();
-    })
-    .catch(error=>console.error("Error:",error));
+    const showAlert = (message, type = 'success', redirectUrl = null) => {
+        const alertDiv = document.getElementById('payment-alert');
+        alertDiv.textContent = message;
+        alertDiv.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded shadow-lg text-white text-center text-lg font-semibold ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+        alertDiv.classList.remove('hidden');
+        if (type === 'success' && redirectUrl) {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1500);
+        } else if (type === 'error') {
+            setTimeout(() => {
+                alertDiv.classList.add('hidden');
+            }, 3500);
+        }
+    };
+    const amount = "{{amount}}";
+    if (!amount || isNaN(amount) || parseInt(amount) <= 0) {
+        alert("Invalid or missing payment amount. Please go back and try again.");
+    } else {
+        fetch('/payment/create_order_id/',{
+            method : "POST",
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body : `amount=${amount}`
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create payment order.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                showAlert(data.error, 'error');
+                return;
+            }
+            let options = {
+                    "key": "{{ razorpay_key }}",  
+                    "amount": data.amount,  
+                    "currency": "INR",
+                    "name": "Quick Commerce",
+                    "description": "Purchase",
+                    "order_id": data.id,  
+                    "handler": function (response) {
+                        fetch('/payment/verify_payment/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: `razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}&checkout_id={{checkout_id}}`
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.status === 'Payment Successful') {
+                                showAlert('Payment Successful! Redirecting...', 'success', `/checkout/final/{{checkout_id}}`);
+                            } else {
+                                showAlert('Payment Failed. Please try again.', 'error');
+                            }
+                        })
+                        .catch(err => {
+                            showAlert('Payment verification failed.', 'error');
+                            console.error(err);
+                        });
+                    },
+                    "theme": { "color": "#3399cc" },
+                    "modal": {
+                        "ondismiss": function() {
+                            showAlert('Payment cancelled. Redirecting to cart...', 'error');
+                            setTimeout(() => {
+                                window.location.href = "/cart/";
+                            }, 1800);
+                        }
+                    }
+                };
+                let rzp = new Razorpay(options);
+                rzp.open();
+        })
+        .catch(error => {
+            showAlert("There was an error processing your payment. Please try again later.", 'error');
+            console.error("Error:", error);
+        });
+    }
 </script>
 {% endblock %}

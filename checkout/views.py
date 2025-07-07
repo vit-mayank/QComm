@@ -7,6 +7,8 @@ from orders.models import Order_Item,Order
 from .models import Checkout
 from seller.models import Customer
 from django.conf import settings
+import os
+
 # Create your views here.
 
 @login_required
@@ -43,7 +45,12 @@ def checkout_second(request):
                 inst.user = request.user
                 inst.save()
                 if inst.payment_method != "cod":
-                    return render(request,'payment/payment.html',{"razorpay_key": settings.RAZORPAY_KEY_ID})
+                    latest_checkout = Checkout.objects.filter(user=request.user).order_by('-id').first()
+                    return render(request,'payment/payment.html',{
+                        "razorpay_key": settings.RAZORPAY_KEY_ID,
+                        "amount": latest_checkout.total,
+                        "checkout_id": latest_checkout.id
+                    })
                 return redirect('checkout_final',checkout = inst.id)
         else:
             inst = checkout_form()
@@ -79,3 +86,6 @@ def checkout_final(request,checkout):
             order.order_items.add(order_item)
         return redirect('order_page',orderid = order.id)
     return render(request,"checkout/checkout_final.html",{"items":items,"total":total,"shipping_details":shipping_details})
+
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")

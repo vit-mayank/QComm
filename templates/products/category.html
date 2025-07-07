@@ -2,145 +2,36 @@
 {% block title %}Category{% endblock %}
 
 {% block content %}
-<style>
-    /* Layout */
-.container {
-    display: flex;
-    width: 100%;
-    padding:0;
-    margin:0;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 20%;
-    background: #f8f8f8;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-}
-.sidebar ul{
-    padding: 0;
-}
-
-.subcategory {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-}
-
-a{
-    text-decoration:none;
-    color : #1f1f1f;
-}
-.subcategory.active {
-    background: #d4fad4;
-    font-weight: bold;
-}
-
-/* Product Section */
-.product-section {
-    width: 80%;
-    padding: 20px;
-}
-
-#product-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.product-card {
-    width: 200px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.product-card img {
-    width: 100%;
-    height: 100px;
-    object-fit:contain;
-}
-
-button {
-    background: green;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-</style>
-<div class="container">
-    <!-- Left Sidebar (Subcategories) -->
-    <div class="sidebar">
-        <ul id="subcategory-list">
+<div class="flex flex-col md:flex-row w-full">
+    <!-- Sidebar -->
+    <aside class="md:w-1/5 w-full bg-gray-100 dark:bg-gray-800 p-4 sticky top-20 h-fit md:h-[80vh] rounded-lg shadow-md">
+        <ul class="space-y-2">
             {% for subcategory,inventories in products_list %}
-                <li class="subcategory active" data-category="{{subcategory.id}}">
-                    <a href="#{{subcategory.id}}">
-                        {{subcategory.title}}
-
-                    </a>
+                <li class="">
+                    <a href="#{{subcategory.id}}" class="block px-3 py-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors text-gray-800 dark:text-gray-100 font-medium">{{subcategory.title}}</a>
                 </li>
             {% endfor %}
-    </div>
-
-    <!-- Right Section (Products) -->
-    <div class="product-section">
-        <h2 id="category-title">{{products_list.0.0.category.title}}</h2><br>
-        <div id="product-list">
-            <!-- Sample Product Card -->
+        </ul>
+    </aside>
+    <!-- Product Section -->
+    <section class="md:w-4/5 w-full p-4">
+        <h2 class="text-2xl font-bold mb-6" id="category-title">{{products_list.0.0.category.title}}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="product-list">
             {% for subcategory,inventories in products_list %}
-            <div id = "{{subcategory.id}}" class="d-none"></div>
                 {% for inventory in inventories %}
-                <div class="product-card" data-category="{{subcategory.id}}">
-                        <a href="{%url 'product_page' inventory.product.id%}">
-                            <img src="{{inventory.product.image.url}}" alt="{{inventory.product.title}}">
-                            <p>{{inventory.product.title}}</p>
-                            <p>{{inventory.product.price}}</p>
-                        </a>
-                        {% with product=inventory.product%}
-                            {%include "components/add_to_cart_button.html"%}
-                        {%endwith%}
-                        
-                    </div>
+                <div class="bg-white dark:bg-gray-900 rounded-lg shadow p-4 flex flex-col items-center">
+                    <a href="{% url 'product_page' inventory.product.id %}" class="w-full flex flex-col items-center">
+                        <img src="{{inventory.product.image.url}}" alt="{{inventory.product.title}}" class="w-full h-32 object-contain rounded mb-2 bg-gray-50 dark:bg-gray-800" />
+                        <p class="font-semibold text-lg text-center">{{inventory.product.title}}</p>
+                        <p class="text-blue-600 dark:text-blue-400 font-bold">₹{{inventory.product.price}}</p>
+                    </a>
+                    {% with product=inventory.product %}
+                        {% include "components/add_to_cart_button.html" %}
+                    {% endwith %}
+                </div>
                 {% endfor %}
             {% endfor %}
-
-            <!-- Add more product cards with appropriate category data -->
         </div>
-    </div>
+    </section>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const subcategories = document.querySelectorAll(".subcategory");
-        const products = document.querySelectorAll(".product-card");
-    
-        window.addEventListener("scroll", function () {
-            let currentCategory = "";
-    
-            products.forEach((product) => {
-                const rect = product.getBoundingClientRect();
-                if (rect.top < window.innerHeight / 2) {
-                    currentCategory = product.dataset.category;
-                }
-            });
-            console.log(currentCategory);
-            subcategories.forEach((sub) => {
-                sub.classList.remove("active");
-                if (sub.dataset.category === currentCategory) {
-                    sub.classList.add("active");
-                }
-            });
-        });
-    });
-    
-</script>
 {% endblock %}

@@ -3,17 +3,16 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1>Dashboard:</h1>
+<h1 class="text-2xl font-bold mb-6">Dashboard:</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 {% for dark_store,count in dark_stores %}
-
-<div class="card">
-    <img src="" class="card-img-top" alt="">
-    <div class="card-body">
-      <div class="d-flex">
-        <h5 class="card-title w-50"> <a href="{%url 'dark_store' dark_store.id%}" class="text-decoration-none text-dark-emphasis">{{dark_store.name}}</a></h5> <h5 class="float-left text-end w-50"><a href="{%url 'seller_orders' dark_store.id %}" class="btn btn-danger rounded-circle">{{count}}</a></h5>
-      </div>
-      <p class="card-text"> {{dark_store.location}} </p>
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow p-6 flex flex-col">
+    <div class="flex items-center justify-between mb-2">
+      <h5 class="text-xl font-semibold"><a href="{% url 'dark_store' dark_store.id %}" class="hover:underline text-blue-600 dark:text-blue-400">{{dark_store.name}}</a></h5>
+      <a href="{% url 'seller_orders' dark_store.id %}" class="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-full font-bold">{{count}}</a>
     </div>
+    <p class="text-gray-600 dark:text-gray-300">{{dark_store.location}}</p>
   </div>
 {% endfor %}
+</div>
 {% endblock %}

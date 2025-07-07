@@ -4,27 +4,41 @@
 
 {% block content %}
 {% if inventory %}
-    <table class="table text-center">
-        <tr>
-            <th>Item</th>
-            <th>Stock</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        {% for item in inventory%}
-        <tr>
-            <th> {{item.product.title}} </th>
-            <td>{{item.stock}}</td>
-            <td><a href="{%url 'edit_product' item.dark_store.id item.id%}" class = "btn btn-warning">Edit</a></td>
-            <td><a href="{%url 'delete_product' item.dark_store.id item.id%}" class = "btn btn-danger">Delete</a></td>
-        </tr>
-        {% endfor %}
-        {% with inventory|first as item %}
-        <th colspan=4><a href="{%url 'create_product' item.dark_store.id %}" class="btn btn-success">Add</a></th>
-        {% endwith %}
-    </table>
+  <div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-6 mt-6">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center">
+        <thead class="bg-gray-100 dark:bg-gray-800">
+          <tr>
+            <th class="px-4 py-2 font-semibold">Item</th>
+            <th class="px-4 py-2 font-semibold">Stock</th>
+            <th class="px-4 py-2 font-semibold">Edit</th>
+            <th class="px-4 py-2 font-semibold">Delete</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-900">
+          {% for item in inventory %}
+          <tr class="border-b dark:border-gray-800">
+            <td class="px-4 py-2">{{item.product.title}}</td>
+            <td class="px-4 py-2">{{item.stock}}</td>
+            <td class="px-4 py-2"><a href="{% url 'edit_product' item.dark_store.id item.id %}" class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-1 px-3 rounded transition">Edit</a></td>
+            <td class="px-4 py-2"><a href="{% url 'delete_product' item.dark_store.id item.id %}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded transition">Delete</a></td>
+          </tr>
+          {% endfor %}
+          {% with inventory|first as item %}
+          <tr>
+            <td colspan="4" class="py-4">
+              <a href="{% url 'create_product' item.dark_store.id %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded transition">Add Product</a>
+            </td>
+          </tr>
+          {% endwith %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% else %}
-    <h1>Your Dark Store is empty.</h1>
-    <a href="{%url 'create_product' darkstoreid %}" class="btn btn-success">Add</a>
+  <div class="max-w-lg mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center">
+    <h1 class="text-2xl font-bold mb-4">Your Dark Store is empty.</h1>
+    <a href="{% url 'create_product' darkstoreid %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded transition">Add Product</a>
+  </div>
 {% endif %}
 {% endblock %}

@@ -3,11 +3,13 @@
 {% block title %}Edit Product{% endblock %}
 
 {% block content %}
-<form method="POST">
+<div class="max-w-lg mx-auto bg-white dark:bg-gray-900 rounded-lg shadow p-8">
+  <h2 class="text-2xl font-bold mb-6">Edit Product</h2>
+  <form method="POST" class="space-y-4">
     {% csrf_token %}
-    {{form1.as_p}}
-    {{form2.as_p}}
-    <button type="submit">Edit</button>
-</form>
-
+    <div class="space-y-2">{{form1.as_p}}</div>
+    <div class="space-y-2">{{form2.as_p}}</div>
+    <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded transition">Edit</button>
+  </form>
+</div>
 {% endblock %}
